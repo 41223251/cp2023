@@ -1,6 +1,140 @@
-<h1>W7</h1>
-<p><img caption="false" height="267" src="/images/proc_flag.png" width="400"/></p><h1>w14</h1>
-<p><a href="https://mde.tw/cpnote/content/%E7%B7%9A%E4%B8%8A%E7%B9%AA%E5%9C%96.html?src=https://gist.githubusercontent.com/41223251/74965c6e370085cf5048e616cb3a9d71/raw/49182ac29c36e38a5bf992956a56650a67f215f7/w14_1_helloworld.py">列印10次 Hello World</a></p><h1>usa</h1>
+<h1>w7</h1>
+<pre class="brush:html;auto-links:false;toolbar:false custom-cursor-default-hover" contenteditable="false">#include &lt;stdio.h&gt;
+#include &lt;gd.h&gt;
+#include &lt;math.h&gt;
+
+void draw_chinese_flag(gdImagePtr img);
+
+int main() {
+    int width = 300; // 國旗寬度
+    int height = 200; // 國旗高度
+
+    gdImagePtr im = gdImageCreateTrueColor(width, height);
+    gdImageAlphaBlending(im, 0);
+
+    draw_chinese_flag(im);
+
+    FILE *outputFile = fopen("./../images/proc_flag.png", "wb");
+    if (outputFile == NULL) {
+        fprintf(stderr, "打开输出文件时出错。\n");
+        return 1;
+    }
+
+    gdImagePngEx(im, outputFile, 9);
+    fclose(outputFile);
+    gdImageDestroy(im);
+
+    return 0;
+}
+
+// 声明 draw_star 函数
+void draw_star(gdImagePtr img, int x, int y, int size, int color, double rotation_angle);
+
+void draw_chinese_flag(gdImagePtr img) {
+    int width = gdImageSX(img);
+    int height = gdImageSY(img);
+    int red, yellow;
+
+    // 國旗顏色
+    red = gdImageColorAllocate(img, 255, 0, 0); // 紅色背景
+    yellow = gdImageColorAllocate(img, 255, 255, 0); // 黃色星星
+
+    // 畫紅色背景
+    gdImageFilledRectangle(img, 0, 0, width, height, red);
+
+    // 設置星星的大小和位置
+    int star_size = (int)(0.28 * height);
+    int star_x = (int)(0.165 * width);
+    int star_y = (int)(0.265 * height);
+
+    // 畫大星星
+    draw_star(img, star_x, star_y, star_size, yellow, 11.0);
+
+    // 繪製小星星，位置根據實際國旗比例計算
+    double radius = 0.15 * height;
+    double angle = 360 / 7 * M_PI / 179.0;
+    double rotation = -M_PI / 7.5;
+    int cx = (int)(0.32 * width);
+    int cy = (int)(0.27 * height);
+
+    for (int i = -1; i &lt; 3; i++) {
+        int x = (int)(cx + radius * cos(i * angle + rotation));
+        int y = (int)(cy + radius * sin(i * angle + rotation));
+        draw_star(img, x, y, 19, yellow, M_PI / 5.0);
+    }
+}
+
+void draw_star(gdImagePtr img, int x, int y, int size, int color, double rotation_angle) {
+    gdPoint points[10];
+
+    // 计算星形的五个外点和五个内点
+    double outer_radius = size / 2;
+    double inner_radius = size / 6;
+    double angle = M_PI / 5.0;
+
+    for (int i = 0; i &lt; 10; i++) {
+        double radius = (i % 2 == 0) ? outer_radius : inner_radius;
+        double theta = rotation_angle + i * angle;
+        points[i].x = x + radius * cos(theta);
+        points[i].y = y + radius * sin(theta);
+    }
+
+    // 使用 gdImageFilledPolygon 绘制星形
+    gdImageFilledPolygon(img, points, 10, color);
+}
+</pre>
+<p><img caption="false" height="267" src="/images/proc_flag.png" width="400"/></p><h3>日本國旗</h3>
+<p></p>
+<pre class="brush:html;auto-links:false;toolbar:false custom-cursor-default-hover" contenteditable="false">#include &lt;stdio.h&gt;
+#include &lt;gd.h&gt;
+#include &lt;math.h&gt;
+
+#define WHITE 255, 255, 255
+#define RED 255, 0, 0
+
+void draw_japan_flag(gdImagePtr img);
+
+int main() {
+    int width = 600;  // 國旗寬度
+    int height = 400; // 國旗高度
+
+    gdImagePtr img = gdImageCreateTrueColor(width, height);
+    gdImageAlphaBlending(img, 0);
+
+    draw_japan_flag(img);
+
+    FILE *outputFile = fopen("./../images/japan_flag.png", "wb");
+    if (outputFile == NULL) {
+        fprintf(stderr, "Error opening the output file.\n");
+        return 1;
+    }
+
+    gdImagePngEx(img, outputFile, 9);
+    fclose(outputFile);
+    gdImageDestroy(img);
+
+    return 0;
+}
+
+void draw_japan_flag(gdImagePtr img) {
+    int width = gdImageSX(img);
+    int height = gdImageSY(img);
+
+    // Draw white background
+    gdImageFilledRectangle(img, 0, 0, width, height, gdImageColorAllocate(img, WHITE));
+
+    // Draw red circle
+    int circle_radius = height / 4;
+    int circle_x = width / 2;
+    int circle_y = height / 2;
+
+    gdImageFilledEllipse(img, circle_x, circle_y, circle_radius * 2, circle_radius * 2, gdImageColorAllocate(img, RED));
+}
+</pre>
+<p><img caption="false" height="267" src="/images/japan_flag.png" width="400"/></p>
+<h1>w14</h1>
+<p><a href="https://mde.tw/cpnote/content/%E7%B7%9A%E4%B8%8A%E7%B9%AA%E5%9C%96.html?src=https://gist.githubusercontent.com/41223251/74965c6e370085cf5048e616cb3a9d71/raw/49182ac29c36e38a5bf992956a56650a67f215f7/w14_1_helloworld.py">列印10次 Hello World</a></p>
+<h1>usa</h1>
 <pre class="brush:cpp;auto-links:false;toolbar:false custom-cursor-default-hover" contenteditable="false">#include &lt;stdio.h&gt;
 #include &lt;gd.h&gt;
 #include &lt;math.h&gt;
@@ -94,7 +228,8 @@ void draw_star(gdImagePtr img, int x, int y, int size, int color, double rotatio
 <p>cd downloads</p>
 <p>cc gd_usa_flag.c -lgd -lm</p>
 <p>./a.out</p>
-<p></p><h1>roc</h1>
+<p></p>
+<h1>roc</h1>
 <pre class="brush:cpp;auto-links:false;toolbar:false custom-cursor-default-hover" contenteditable="false">#include &lt;stdio.h&gt;
 #include &lt;gd.h&gt;
 #include &lt;math.h&gt;
@@ -182,7 +317,8 @@ void draw_white_sun(gdImagePtr img, int center_x, int center_y, int sun_radius, 
 <p>clear</p>
 <p>cd downloads</p>
 <p>cc gd_roc_flag.c -lgd -lm</p>
-<p>./a.out</p><h1>w5</h1>
+<p>./a.out</p>
+<h1>w5</h1>
 <pre class="brush:html;auto-links:false;toolbar:false custom-cursor-default-hover" contenteditable="false">// 包含標準輸出入程式庫的標頭文件
 // https://blog.csdn.net/weixin_38468077/article/details/101069365
 // http://www.gnuplot.info/demo/
@@ -230,7 +366,8 @@ int main() {
 <p>cd downloads</p>
 <p>cc gnuplot_ex1.c</p>
 <p>./a.out</p>
-<p><img alt="" height="200" src="/images/gnuplot_ex1.png" width="400"/></p><h1>Brython</h1>
+<p><img alt="" height="200" src="/images/gnuplot_ex1.png" width="400"/></p>
+<h1>Brython</h1>
 <p><a href="https://en.wikipedia.org/wiki/Python_(programming_language)">https://en.wikipedia.org/wiki/Python_(programming_language)</a></p>
 <h4>Examples:</h4>
 <p style="padding-left: 30px;"><a href="https://gist.github.com/mdecycu/d9082d678096bd58378d6afe2c7fa05d">https://gist.github.com/mdecycu/d9082d678096bd58378d6afe2c7fa05d</a></p>

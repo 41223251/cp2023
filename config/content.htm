@@ -83,8 +83,56 @@ void draw_star(gdImagePtr img, int x, int y, int size, int color, double rotatio
     gdImageFilledPolygon(img, points, 10, color);
 }
 </pre>
-<p><img caption="false" height="267" src="/images/proc_flag.png" width="400"/></p><h1>w14</h1>
-<p><a href="https://mde.tw/cpnote/content/%E7%B7%9A%E4%B8%8A%E7%B9%AA%E5%9C%96.html?src=https://gist.githubusercontent.com/41223251/74965c6e370085cf5048e616cb3a9d71/raw/49182ac29c36e38a5bf992956a56650a67f215f7/w14_1_helloworld.py">列印10次 Hello World</a></p><h1>usa</h1>
+<p><img caption="false" height="267" src="/images/proc_flag.png" width="400"/></p>
+<pre class="brush:html;auto-links:false;toolbar:false custom-cursor-default-hover" contenteditable="false">#include &lt;stdio.h&gt;
+#include &lt;gd.h&gt;
+#include &lt;math.h&gt;
+
+#define WHITE 255, 255, 255
+#define RED 255, 0, 0
+
+void draw_japan_flag(gdImagePtr img);
+
+int main() {
+    int width = 600;  // 國旗寬度
+    int height = 400; // 國旗高度
+
+    gdImagePtr img = gdImageCreateTrueColor(width, height);
+    gdImageAlphaBlending(img, 0);
+
+    draw_japan_flag(img);
+
+    FILE *outputFile = fopen("./../images/japan_flag.png", "wb");
+    if (outputFile == NULL) {
+        fprintf(stderr, "Error opening the output file.\n");
+        return 1;
+    }
+
+    gdImagePngEx(img, outputFile, 9);
+    fclose(outputFile);
+    gdImageDestroy(img);
+
+    return 0;
+}
+
+void draw_japan_flag(gdImagePtr img) {
+    int width = gdImageSX(img);
+    int height = gdImageSY(img);
+
+    // Draw white background
+    gdImageFilledRectangle(img, 0, 0, width, height, gdImageColorAllocate(img, WHITE));
+
+    // Draw red circle
+    int circle_radius = height / 4;
+    int circle_x = width / 2;
+    int circle_y = height / 2;
+
+    gdImageFilledEllipse(img, circle_x, circle_y, circle_radius * 2, circle_radius * 2, gdImageColorAllocate(img, RED));
+}
+</pre>
+<p><img caption="false" height="267" src="/images/japan_flag.png" width="400"/></p><h1>w14</h1>
+<p><a href="https://mde.tw/cpnote/content/%E7%B7%9A%E4%B8%8A%E7%B9%AA%E5%9C%96.html?src=https://gist.githubusercontent.com/41223251/74965c6e370085cf5048e616cb3a9d71/raw/49182ac29c36e38a5bf992956a56650a67f215f7/w14_1_helloworld.py">列印10次 Hello World</a></p>
+<h1>usa</h1>
 <pre class="brush:cpp;auto-links:false;toolbar:false custom-cursor-default-hover" contenteditable="false">#include &lt;stdio.h&gt;
 #include &lt;gd.h&gt;
 #include &lt;math.h&gt;
@@ -178,7 +226,8 @@ void draw_star(gdImagePtr img, int x, int y, int size, int color, double rotatio
 <p>cd downloads</p>
 <p>cc gd_usa_flag.c -lgd -lm</p>
 <p>./a.out</p>
-<p></p><h1>roc</h1>
+<p></p>
+<h1>roc</h1>
 <pre class="brush:cpp;auto-links:false;toolbar:false custom-cursor-default-hover" contenteditable="false">#include &lt;stdio.h&gt;
 #include &lt;gd.h&gt;
 #include &lt;math.h&gt;
@@ -266,7 +315,8 @@ void draw_white_sun(gdImagePtr img, int center_x, int center_y, int sun_radius, 
 <p>clear</p>
 <p>cd downloads</p>
 <p>cc gd_roc_flag.c -lgd -lm</p>
-<p>./a.out</p><h1>w5</h1>
+<p>./a.out</p>
+<h1>w5</h1>
 <pre class="brush:html;auto-links:false;toolbar:false custom-cursor-default-hover" contenteditable="false">// 包含標準輸出入程式庫的標頭文件
 // https://blog.csdn.net/weixin_38468077/article/details/101069365
 // http://www.gnuplot.info/demo/
@@ -314,7 +364,8 @@ int main() {
 <p>cd downloads</p>
 <p>cc gnuplot_ex1.c</p>
 <p>./a.out</p>
-<p><img alt="" height="200" src="/images/gnuplot_ex1.png" width="400"/></p><h1>Brython</h1>
+<p><img alt="" height="200" src="/images/gnuplot_ex1.png" width="400"/></p>
+<h1>Brython</h1>
 <p><a href="https://en.wikipedia.org/wiki/Python_(programming_language)">https://en.wikipedia.org/wiki/Python_(programming_language)</a></p>
 <h4>Examples:</h4>
 <p style="padding-left: 30px;"><a href="https://gist.github.com/mdecycu/d9082d678096bd58378d6afe2c7fa05d">https://gist.github.com/mdecycu/d9082d678096bd58378d6afe2c7fa05d</a></p>
