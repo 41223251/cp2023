@@ -1,64 +1,83 @@
 #include <stdio.h>
-#include <easyx.h>
+#include <gd.h>
 #include <math.h>
-#include <graphics.h>        // 引用图形库头文件
-#include <conio.h>
-#include<time.h>
-#define PI 3.14
-void fivePointedStar(int radius, double startAngle)//  角星的外接圆半径和起始角度作为参数，由调用者决定
-{
-    double delta = 2 * PI / 5;      //  增量为一个圆的5分之一
-    POINT points[5];                //  长度为5的POINT数组，用于存储5个点
-    for (int i = 0; i < 5; i++)
-    {
-        points[i].x = cos(startAngle + i * delta * 2) * radius;   //  计算x坐标 
-        points[i].y = sin(startAngle + i * delta * 2) * radius;   //  计算y坐标
-    }
-    solidpolygon(points, 5);
+
+void draw_chinese_flag(gdImagePtr img);
+
+int main() {
+int width = 300; // 國旗寬度
+int height = 200; // 國旗高度
+
+gdImagePtr im = gdImageCreateTrueColor(width, height);
+gdImageAlphaBlending(im, 0);
+
+draw_chinese_flag(im);
+
+FILE *outputFile = fopen("./../images/proc_flag.png", "wb");
+if (outputFile == NULL) {
+fprintf(stderr, "打开输出文件时出错。\n");
+return 1;
 }
-int main(void)
-{
-    int width = 900;
-    int height = width / 3 * 2;    //  高度为宽度的2/3
-    int grid = width / 3 / 15;    //  网格宽度
-    initgraph(800, 420);    //  创建窗体设置背景色
-    setbkcolor(BLACK);
-    cleardevice();
-setcolor(YELLOW);  //  文本颜色
-setbkcolor(BLACK);  //  文本背景色
-settextstyle(100,0,"楷体");  //  文本高度和字体
-outtextxy(600, 10, "喜");  //  文本位置和内容
-outtextxy(600, 110, "迎");  //  文本位置和内容
-outtextxy(600, 210, "国");  //  文本位置和内容
-outtextxy(600, 310, "庆");  //  文本位置和内容
-outtextxy(700, 10, "举");  //  文本位置和内容
-outtextxy(700, 110, "国");  //  文本位置和内容
-outtextxy(700, 210, "欢");  //  文本位置和内容
-outtextxy(700, 310, "庆");  //  文本位置和内容
-setcolor(YELLOW);
-setbkcolor(BLACK);
-settextstyle(20,0,"楷体");
-outtextxy(650, 400, "Dotcpp.com");
-    setfillcolor(RED);
-solidrectangle(10,10,600,400);
-    setaspectratio(1, -1);    //  翻转坐标轴，设置填充颜色为黄色
-    setfillcolor(YELLOW);
-    setpolyfillmode(WINDING);
-    setorigin(grid * 5, grid * 5);    //  大五角星
-    fivePointedStar(grid * 3, PI / 2);
-    setorigin(grid * 10, grid * 2);    //  小五角星1
-    double startAngle = atan(3.0 / 5.0) + PI;
-    fivePointedStar(grid, startAngle);
-    setorigin(grid * 12, grid * 4);    //  小五角星2
-    startAngle = atan(1.0 / 7.0) + PI;
-    fivePointedStar(grid, startAngle);
-    setorigin(grid * 12, grid * 7);    //  小五角星3
-    startAngle = -atan(2.0 / 7.0) + PI;
-    fivePointedStar(grid, startAngle);
-    setorigin(grid * 10, grid * 9);    //  小五角星4
-    startAngle = -atan(4.0 / 5.0) + PI;
-    fivePointedStar(grid, startAngle);
-    getchar();
-    closegraph();
-    return 0;
+
+gdImagePngEx(im, outputFile, 9);
+fclose(outputFile);
+gdImageDestroy(im);
+
+return 0;
+}
+
+// 声明 draw_star 函数
+void draw_star(gdImagePtr img, int x, int y, int size, int color, double rotation_angle);
+
+void draw_chinese_flag(gdImagePtr img) {
+int width = gdImageSX(img);
+int height = gdImageSY(img);
+int red, yellow;
+
+// 國旗顏色
+red = gdImageColorAllocate(img, 255, 0, 0); // 紅色背景
+yellow = gdImageColorAllocate(img, 255, 255, 0); // 黃色星星
+
+// 畫紅色背景
+gdImageFilledRectangle(img, 0, 0, width, height, red);
+
+// 設置星星的大小和位置
+int star_size = (int)(0.28 * height);
+int star_x = (int)(0.165 * width);
+int star_y = (int)(0.265 * height);
+
+// 畫大星星
+draw_star(img, star_x, star_y, star_size, yellow, 11.0);
+
+// 繪製小星星，位置根據實際國旗比例計算
+double radius = 0.15 * height;
+double angle = 360 / 7 * M_PI / 179.0;
+double rotation = -M_PI / 7.5;
+int cx = (int)(0.32 * width);
+int cy = (int)(0.27 * height);
+
+for (int i = -1; i < 3; i++) {
+int x = (int)(cx + radius * cos(i * angle + rotation));
+int y = (int)(cy + radius * sin(i * angle + rotation));
+draw_star(img, x, y, 19, yellow, M_PI / 5.0);
+}
+}
+
+void draw_star(gdImagePtr img, int x, int y, int size, int color, double rotation_angle) {
+gdPoint points[10];
+
+// 计算星形的五个外点和五个内点
+double outer_radius = size / 2;
+double inner_radius = size / 6;
+double angle = M_PI / 5.0;
+
+for (int i = 0; i < 10; i++) {
+double radius = (i % 2 == 0) ? outer_radius : inner_radius;
+double theta = rotation_angle + i * angle;
+points[i].x = x + radius * cos(theta);
+points[i].y = y + radius * sin(theta);
+}
+
+// 使用 gdImageFilledPolygon 绘制星形
+gdImageFilledPolygon(img, points, 10, color);
 }
