@@ -142,56 +142,84 @@ img.add_border {
           </div>
           
         </header>
-    <div id="tipue_search_content">roc << <a href='roc.html'>Previous</a> <a href='Brython.html'>Next</a> >> Brython<br /><h1>w5</h1>
-<pre class="brush:html;auto-links:false;toolbar:false custom-cursor-default-hover" contenteditable="false">// 包含標準輸出入程式庫的標頭文件
-// https://blog.csdn.net/weixin_38468077/article/details/101069365
-// http://www.gnuplot.info/demo/
-// https://github.com/sysprog21/rv32emu
-// https://github.com/sysprog21/semu 
-// https://docs.google.com/presentation/d/14N0cWG2SnBSqhc2cLF0_2VerB9FF8JN3
-// https://cs61c.org/fa23/
-// https://greenteapress.com/wp/think-python-2e/
-// https://github.com/ecalvadi/c99-examples
-// https://github.com/gouravthakur39/beginners-C-program-examples
-// https://github.com/ergenekonyigit/Numerical-Analysis-Examples
-// https://www.che.ncku.edu.tw/facultyweb/changct/html/teaching/CPPandMATLAB/Past/pdf%20Files/Chap02-Ling.pdf
-// https://gteceducation.com.sg/Brochures/PROGRAMMING/C%20PROGRAMMING%20FULL.pdf
-// https://jsommers.github.io/cbook/cbook.pdf
-// https://jsommers.github.io/cbook/index.html
-// http://student.itee.uq.edu.au/courses/csse2310/CProgrammingNotes.pdf
-// http://cslibrary.stanford.edu/101/EssentialC.pdf
-// https://publications.gbdirect.co.uk/c_book/
-// https://www.fossil-scm.org/fossil-book/doc/2ndEdition/fossilbook.pdf
-// ***** execute on replit 
-// cd downloads
-// cc gnuplot_ex1.c -o gnuplot_ex1
-// ./gnuplot_ex1
-#include &lt;stdio.h&gt;
-  
-// 主函式
+    <div id="tipue_search_content">About << <a href='About.html'>Previous</a> <a href='w12.html'>Next</a> >> w12<br /><h1>w15</h1>
+<p><span>1.</span><span>根據 </span><a href="https://nfuedu-my.sharepoint.com/:u:/g/personal/yen_nfu_edu_tw/EVcefUI2zPpAmP6lnLWLEAoBCBznMnvFpsNE-1VVFGvVZQ?e=goiPpP&amp;isSPOFile=1">roc_list_coord_flag.7z</a><span><span> </span>程式內容所印出的六組 ABED 等繪製 ROC 國旗白日圖案中的菱形四個關鍵點, 請直接在青天與滿地紅的圖案中, 利用白色作為畫線顏色, 將第二組的 ABED 等四個點的座標, 以直線相連.</span></p>
+<p><span></span></p>
+<pre class="brush:cpp;auto-links:false;toolbar:false custom-cursor-default-hover" contenteditable="false">#include &lt;stdio.h&gt;
+#include &lt;gd.h&gt;
+#include &lt;math.h&gt;
+
+void draw_roc_flag(gdImagePtr img);
+
 int main() {
-    // Start a Gnuplot process using popen
-    FILE *gnuplotPipe = popen("gnuplot -persistent", "w");
-    if (!gnuplotPipe) {
-        fprintf(stderr, "Failed to start Gnuplot.\n");
+    // width 3: height 2
+    int width = 1200;
+    // 國旗長寬比為 3:2
+    int height = (int)(width * 2.0 / 3.0);
+
+    gdImagePtr img = gdImageCreateTrueColor(width, height);
+    gdImageAlphaBlending(img, 0);
+
+    draw_roc_flag(img);
+
+    FILE *outputFile = fopen("roc_flag_in_gd.png", "wb");
+    if (outputFile == NULL) {
+        fprintf(stderr, "Error opening the output file.\n");
         return 1;
     }
-  
-    // Use Gnuplot plotting commands, specify font and output as PNG
-    fprintf(gnuplotPipe, "set terminal png font 'default,10' size 800,400\n");
-    fprintf(gnuplotPipe, "set output './../images/gnuplot_ex1.png'\n");
-    fprintf(gnuplotPipe, "plot sin(x)");
-    // Close popen
-    pclose(gnuplotPipe);
-  
+    gdImagePngEx(img, outputFile, 9);
+    fclose(outputFile);
+    gdImageDestroy(img);
     return 0;
-}</pre>
-<p>clear</p>
-<p>cd downloads</p>
-<p>cc gnuplot_ex1.c</p>
-<p>./a.out</p>
-<p><img alt="" height="200" src="./../images/gnuplot_ex1.png" width="400"/></p>
-<br />roc << <a href='roc.html'>Previous</a> <a href='Brython.html'>Next</a> >> Brython</div>
+}
+
+void draw_roc_flag(gdImagePtr img) {
+    int width = gdImageSX(img);
+    int height = gdImageSY(img);
+    int red, white, blue;
+    // 白日位於青天面積正中央, 因此中心點座標為長寬各 1/4 處
+    int center_x = (int)(width / 4);
+    int center_y = (int)(height / 4);
+    // gdImageFilledEllipse 需以長寬方向的 diameter 作圖
+    // 由於中央白日圓形的半徑為青天寬度的 1/8
+    // 因此中央白日圓形的直徑為青天寬度的 1/4, 也就是國旗寬度的 1/8
+    // 而且白日十二道光芒的外圍圓形其半徑也是國旗寬度的1/8
+    int sun_radius = (int)(width / 8);
+    // 中央白日圓形的直徑等於十二道光芒外圍圓形的半徑
+    int white_circle_dia = sun_radius;
+    // 中央藍色圓形半徑為中央白日的 1又 2/15
+    int blue_circle_dia = white_circle_dia + white_circle_dia * 2 / 15;
+    // 根據 https://www.moi.gov.tw/cp.aspx?n=10621 訂定國旗三種顏色值
+    red = gdImageColorAllocate(img, 255, 0, 0);    // 紅色
+    white = gdImageColorAllocate(img, 255, 255, 255); // 白色
+    blue = gdImageColorAllocate(img, 0, 0, 149);    // 藍色
+    // 根據畫布大小塗上紅色長方形區域
+    gdImageFilledRectangle(img, 0, 0, width, height, red);
+    // 青天面積為整面國旗的 1/4, 也是採用長方形塗色
+    gdImageFilledRectangle(img, 0, 0, (int)(width / 2.0), (int)(height / 2.0), blue);
+    // 利用一個藍色大圓與白色小圓畫出藍色環狀
+    gdImageFilledEllipse(img, center_x, center_y, blue_circle_dia, blue_circle_dia, blue);
+    gdImageFilledEllipse(img, center_x, center_y, white_circle_dia, white_circle_dia, white);
+
+    // 連接四個點
+    int points[8];
+    points[0] = 429;
+    points[1] = 125;
+    points[2] = 279;
+    points[3] = 165;
+    points[4] = 170;
+    points[5] = 274;
+    points[6] = 170;
+    points[7] = 274;
+
+    // 使用白色線條連接四個點
+    gdImageLine(img, points[0], points[1], points[2], points[3], white);
+    gdImageLine(img, points[2], points[3], points[4], points[5], white);
+    gdImageLine(img, points[4], points[5], points[6], points[7], white);
+    gdImageLine(img, points[6], points[7], points[0], points[1], white);
+}
+</pre>
+<p><img caption="false" height="267" src="./../images/roc_flag_in_gd.png" width="400"/></p><br />About << <a href='About.html'>Previous</a> <a href='w12.html'>Next</a> >> w12</div>
         
     <!-- footer -->
       <div class="container">
