@@ -1,5 +1,7 @@
 { pkgs }: {
     deps = [
+      pkgs.vim
+      pkgs.openssh
       pkgs.pandoc
       pkgs.glibcLocales
       pkgs.gitFull
